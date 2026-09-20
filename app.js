@@ -60,6 +60,25 @@ const hindiConditions = {
   'Heavy snow': 'तेज़ बर्फबारी',
   'Thunderstorm': 'आंधी और बारिश'
 };
+const hindiSafetyNotes = {
+  'Clear sky': 'धूप से बचने के लिए पानी पीते रहें।',
+  'Mainly clear': 'बाहर जाते समय पानी साथ रखें।',
+  'Partly cloudy': 'बाहर निकलने के लिए मौसम आरामदायक है।',
+  'Overcast': 'बाहर जाते समय हल्का जैकेट साथ रखें।',
+  'Foggy': 'कोहरे में धीरे और सावधानी से यात्रा करें।',
+  'Light drizzle': 'हल्की बारिश के लिए छाता साथ रखें।',
+  'Drizzle': 'छाता साथ रखें और फिसलन वाली जगहों से सावधान रहें।',
+  'Heavy drizzle': 'तेज़ बूंदाबांदी में सावधानी से बाहर निकलें।',
+  'Light rain': 'छाता साथ रखें और फिसलन से सावधान रहें।',
+  'Rain': 'छाता साथ रखें और फिसलन वाली जगहों से सावधान रहें।',
+  'Heavy rain': 'तेज़ बारिश में सुरक्षित जगह पर रहें।',
+  'Rain showers': 'बाहर निकलते समय छाता साथ रखें।',
+  'Heavy showers': 'तेज़ बौछारों में बाहर जाने से बचें।',
+  'Light snow': 'गर्म कपड़े पहनें और सावधानी से चलें।',
+  'Snow': 'गर्म कपड़े पहनें और बर्फीली जगहों से सावधान रहें।',
+  'Heavy snow': 'भारी बर्फबारी में घर के अंदर सुरक्षित रहें।',
+  'Thunderstorm': 'आंधी के दौरान घर के अंदर सुरक्षित रहें।'
+};
 const safetyNotes = {
   clear: 'Clear skies ahead. Protect your eyes and stay hydrated.',
   cloud: 'A calm day outside. Keep a light layer close by.',
@@ -80,7 +99,8 @@ function getSafetyNote(code) {
 
 function createHindiMessage(place, current, condition) {
   const hindiCondition = hindiConditions[condition] || 'बदलता मौसम';
-  return `नमस्ते। ${place.name} में अभी तापमान ${round(current.temperature_2m)} डिग्री सेल्सियस है। मौसम ${hindiCondition} है।`;
+  const safetyNote = hindiSafetyNotes[condition] || 'बाहर जाते समय सावधानी बरतें।';
+  return `नमस्ते। ${place.name} में अभी तापमान ${round(current.temperature_2m)} डिग्री सेल्सियस है। मौसम ${hindiCondition} है। सावधानी: ${safetyNote} धन्यवाद।`;
 }
 
 async function speakWeather(place, current, condition) {
