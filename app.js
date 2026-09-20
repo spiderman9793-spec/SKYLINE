@@ -80,7 +80,7 @@ function getSafetyNote(code) {
 
 function createHindiMessage(place, current, condition) {
   const hindiCondition = hindiConditions[condition] || 'बदलता मौसम';
-  return `${place.name} में अभी तापमान ${round(current.temperature_2m)} डिग्री सेल्सियस है। मौसम ${hindiCondition} है।`;
+  return `नमस्ते। ${place.name} में अभी तापमान ${round(current.temperature_2m)} डिग्री सेल्सियस है। मौसम ${hindiCondition} है।`;
 }
 
 async function speakWeather(place, current, condition) {
