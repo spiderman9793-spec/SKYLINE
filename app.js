@@ -99,8 +99,12 @@ function getSafetyNote(code) {
 
 function createHindiMessage(place, current, condition) {
   const hindiCondition = hindiConditions[condition] || 'बदलता मौसम';
-  const safetyNote = hindiSafetyNotes[condition] || 'बाहर जाते समय सावधानी बरतें।';
+  const safetyNote = getHindiSafetyNote(condition);
   return `नमस्ते। ${place.name} में अभी तापमान ${round(current.temperature_2m)} डिग्री सेल्सियस है। मौसम ${hindiCondition} है। सावधानी: ${safetyNote} धन्यवाद।`;
+}
+
+function getHindiSafetyNote(condition) {
+  return hindiSafetyNotes[condition] || 'बाहर जाते समय सावधानी बरतें।';
 }
 
 async function speakWeather(place, current, condition) {
@@ -230,7 +234,7 @@ function renderWeather(place, data) {
   document.querySelector('#dashboard-humidity').textContent = `${current.relative_humidity_2m}%`;
   document.querySelector('#dashboard-wind').textContent = `${round(current.wind_speed_10m)} km/h`;
   document.querySelector('#dashboard-feels').textContent = `${round(current.apparent_temperature)}°`;
-  safetyMessage.textContent = getSafetyNote(current.weather_code);
+  safetyMessage.textContent = `${getHindiSafetyNote(condition)} धन्यवाद।`;
   statusText.textContent = `Showing the latest forecast for ${place.name}.`;
 
   document.querySelector('#forecast').innerHTML = data.daily.time.map((date, index) => {
