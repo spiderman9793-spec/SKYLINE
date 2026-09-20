@@ -83,21 +83,6 @@ function createHindiMessage(place, current, condition) {
   return `${place.name} में अभी तापमान ${round(current.temperature_2m)} डिग्री सेल्सियस है। मौसम ${hindiCondition} है।`;
 }
 
-function speakWithBrowser(message) {
-  if (!('speechSynthesis' in window)) return;
-  window.speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(message);
-  const voices = window.speechSynthesis.getVoices();
-  const hindiVoice = voices.find((voice) => /hi(-|_)?IN/i.test(voice.lang) && /female|kalpana|heera|priya/i.test(voice.name))
-    || voices.find((voice) => /hi(-|_)?IN/i.test(voice.lang));
-  if (hindiVoice) utterance.voice = hindiVoice;
-  utterance.lang = 'hi-IN';
-  utterance.rate = 0.9;
-  utterance.pitch = 1.08;
-  utterance.volume = 0.9;
-  window.speechSynthesis.speak(utterance);
-}
-
 async function speakWeather(place, current, condition) {
   if (!voiceEnabled) return;
   const message = createHindiMessage(place, current, condition);
@@ -106,7 +91,7 @@ async function speakWeather(place, current, condition) {
   if ('speechSynthesis' in window) window.speechSynthesis.cancel();
 
   const controller = new AbortController();
-  const timeout = window.setTimeout(() => controller.abort(), 4000);
+  const timeout = window.setTimeout(() => controller.abort(), 10000);
   try {
     const response = await fetch('/api/speak', {
       method: 'POST',
@@ -119,8 +104,9 @@ async function speakWeather(place, current, condition) {
     await currentAudio.play();
     statusText.textContent = `Hindi forecast ready for ${place.name}.`;
   } catch (error) {
-    speakWithBrowser(message);
-    statusText.textContent = `Forecast ready for ${place.name}.`;
+    statusText.textContent = window.location.protocol === 'file:'
+      ? 'Voice needs the server. Open http://localhost:8000.'
+      : 'Forecast ready, but the Hindi female voice is temporarily unavailable.';
   } finally {
     window.clearTimeout(timeout);
   }
