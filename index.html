@@ -13,6 +13,31 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <aside class="host-modal" id="host-modal" aria-hidden="true" aria-label="Skyline weather host">
+    <div class="host-backdrop" id="host-backdrop"></div>
+    <div class="host-card" role="dialog" aria-modal="true" aria-labelledby="host-title">
+      <button class="host-close" id="host-close" type="button" aria-label="Close weather host">×</button>
+      <div class="host-scene">
+        <div class="host-spark spark-a">✦</div>
+        <div class="host-spark spark-b">·</div>
+        <div class="host-avatar" aria-hidden="true">
+          <div class="host-hair"></div>
+          <div class="host-head"><span class="host-eye eye-a"></span><span class="host-eye eye-b"></span><span class="host-smile"></span></div>
+          <div class="host-neck"></div>
+          <div class="host-body"><span class="host-collar"></span><span class="host-badge">+</span></div>
+          <div class="host-arm arm-a"></div><div class="host-arm arm-b"></div>
+        </div>
+      </div>
+      <div class="host-copy">
+        <p class="eyebrow">Skyline weather host</p>
+        <h2 id="host-title">One small look outside.</h2>
+        <p class="host-greeting" id="host-greeting">I’m checking the latest conditions for you.</p>
+        <div class="host-facts"><span id="host-temperature">--°</span><span id="host-condition">Loading...</span></div>
+        <p class="host-safety" id="host-safety">Stay tuned for a safety note.</p>
+        <button class="host-action" id="host-action" type="button"><i data-lucide="volume-2"></i> Hear it again</button>
+      </div>
+    </div>
+  </aside>
   <div class="edge-trigger" aria-hidden="true"></div>
   <aside class="safety-ribbon" id="safety-ribbon" aria-label="Weather safety guidance">
     <span class="safety-mark" aria-hidden="true">!</span>
