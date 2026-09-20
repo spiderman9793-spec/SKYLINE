@@ -7,9 +7,12 @@ const dashboardCity = document.querySelector('#dashboard-city');
 const safetyMessage = document.querySelector('#safety-message');
 const mapCity = document.querySelector('#map-city');
 const mapCoordinates = document.querySelector('#map-coordinates');
+const voiceToggle = document.querySelector('#voice-toggle');
 let dashboardOpen = false;
 let map;
 let mapMarker;
+let voiceEnabled = true;
+let currentAudio;
 
 const weatherLabels = {
   0: ['Clear sky', '☀'],
@@ -38,6 +41,25 @@ const weatherLabels = {
 const getWeatherLabel = (code) => weatherLabels[code] || ['Changing skies', '◌'];
 const formatDay = (date, index) => index === 0 ? 'Today' : new Date(`${date}T12:00:00`).toLocaleDateString('en-US', { weekday: 'short' });
 const round = (value) => Math.round(value);
+const hindiConditions = {
+  'Clear sky': 'साफ आसमान',
+  'Mainly clear': 'ज्यादातर साफ आसमान',
+  'Partly cloudy': 'आंशिक रूप से बादल',
+  'Overcast': 'बादल छाए हुए हैं',
+  'Foggy': 'कोहरा',
+  'Light drizzle': 'हल्की बूंदाबांदी',
+  'Drizzle': 'बूंदाबांदी',
+  'Heavy drizzle': 'तेज़ बूंदाबांदी',
+  'Light rain': 'हल्की बारिश',
+  'Rain': 'बारिश',
+  'Heavy rain': 'तेज़ बारिश',
+  'Rain showers': 'बारिश की बौछारें',
+  'Heavy showers': 'तेज़ बौछारें',
+  'Light snow': 'हल्की बर्फबारी',
+  'Snow': 'बर्फबारी',
+  'Heavy snow': 'तेज़ बर्फबारी',
+  'Thunderstorm': 'आंधी और बारिश'
+};
 const safetyNotes = {
   clear: 'Clear skies ahead. Protect your eyes and stay hydrated.',
   cloud: 'A calm day outside. Keep a light layer close by.',
@@ -54,6 +76,46 @@ function getSafetyNote(code) {
   if ([45, 48].includes(code)) return safetyNotes.fog;
   if ([0, 1].includes(code)) return safetyNotes.clear;
   return safetyNotes.cloud;
+}
+
+function createHindiMessage(place, current, condition) {
+  const hindiCondition = hindiConditions[condition] || 'बदलता मौसम';
+  return `नमस्ते। ${place.name} में अभी तापमान ${round(current.temperature_2m)} डिग्री सेल्सियस है। मौसम ${hindiCondition} है। नमी ${current.relative_humidity_2m} प्रतिशत है और हवा की गति ${round(current.wind_speed_10m)} किलोमीटर प्रति घंटा है।`;
+}
+
+function speakWithBrowser(message) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(message);
+  const voices = window.speechSynthesis.getVoices();
+  const hindiVoice = voices.find((voice) => /hi(-|_)?IN/i.test(voice.lang) && /female|kalpana|heera|priya/i.test(voice.name))
+    || voices.find((voice) => /hi(-|_)?IN/i.test(voice.lang));
+  if (hindiVoice) utterance.voice = hindiVoice;
+  utterance.lang = 'hi-IN';
+  utterance.rate = 0.9;
+  utterance.pitch = 1.08;
+  utterance.volume = 0.9;
+  window.speechSynthesis.speak(utterance);
+}
+
+async function speakWeather(place, current, condition) {
+  if (!voiceEnabled) return;
+  const message = createHindiMessage(place, current, condition);
+  if (currentAudio) currentAudio.pause();
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+
+  try {
+    const response = await fetch('/api/speak', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: message })
+    });
+    if (!response.ok) throw new Error('TTS server unavailable');
+    currentAudio = new Audio(URL.createObjectURL(await response.blob()));
+    await currentAudio.play();
+  } catch (error) {
+    speakWithBrowser(message);
+  }
 }
 
 function animatePage() {
@@ -103,11 +165,21 @@ window.addEventListener('pointermove', (event) => {
 });
 dashboard.addEventListener('pointerleave', () => setDashboard(false));
 dashboardClose.addEventListener('click', () => setDashboard(false));
+voiceToggle.addEventListener('click', () => {
+  voiceEnabled = !voiceEnabled;
+  if (!voiceEnabled) {
+    if (currentAudio) currentAudio.pause();
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+  }
+  voiceToggle.setAttribute('aria-pressed', String(voiceEnabled));
+  voiceToggle.setAttribute('aria-label', voiceEnabled ? 'Turn Hindi weather voice off' : 'Turn Hindi weather voice on');
+  voiceToggle.innerHTML = `<span aria-hidden="true">◖</span> Hindi voice ${voiceEnabled ? 'on' : 'off'}`;
+});
 
 animatePage();
 initializeMap();
 
-async function getForecast(city) {
+async function getForecast(city, announceVoice = false) {
   statusText.textContent = `Looking up ${city}...`;
 
   const locationResponse = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`);
@@ -121,6 +193,7 @@ async function getForecast(city) {
   const data = await forecastResponse.json();
   renderWeather(place, data);
   animateMapTo(place);
+  if (announceVoice) speakWeather(place, data.current, getWeatherLabel(data.current.weather_code)[0]);
 }
 
 function renderWeather(place, data) {
@@ -160,7 +233,7 @@ form.addEventListener('submit', (event) => {
     cityInput.focus();
     return;
   }
-  getForecast(city).catch((error) => {
+  getForecast(city, true).catch((error) => {
     statusText.textContent = error.message;
   });
 });

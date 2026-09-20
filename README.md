@@ -19,13 +19,19 @@ Skyline is a focused weather landing page that helps you understand the sky befo
 No API key or build step is required.
 
 1. Open PowerShell in this project folder.
-2. Start a local web server:
+2. Install the neural Hindi voice library:
 
 	```powershell
-	python -m http.server 8000
+	python -m pip install edge-tts
 	```
 
-3. Open [http://localhost:8000](http://localhost:8000) in your browser.
+3. Start the Skyline server:
+
+	```powershell
+	python voice_server.py
+	```
+
+4. Open [http://localhost:8000](http://localhost:8000) in your browser.
 
 Use a local server instead of opening `index.html` directly so the browser can load the page and external map assets reliably.
 
@@ -37,8 +43,7 @@ Use a local server instead of opening `index.html` directly so the browser can l
 | `styles.css` | Responsive visual design and animations |
 | `app.js` | Weather requests, map behavior, dashboard, and GSAP interactions |
 | `weather.py` | Original Python weather script with text-to-speech |
-| `problem1.py` | Python practice file |
-| `problem3.py` | Python joke and text-to-speech practice file |
+| `voice_server.py` | Local Edge TTS endpoint for the Hindi female neural voice |
 
 ## Data Sources
 
@@ -46,7 +51,28 @@ Use a local server instead of opening `index.html` directly so the browser can l
 - Map tiles: [OpenStreetMap](https://www.openstreetmap.org/)
 - Interactive map: [Leaflet](https://leafletjs.com/)
 - Motion: [GSAP](https://gsap.com/)
+- Hindi speech: [edge-tts](https://github.com/rany2/edge-tts), using `hi-IN-SwaraNeural`
+
+## Free Vercel Deployment
+
+Vercel deploys the landing page and the Python serverless Hindi voice endpoint in `api/speak.py`.
+
+1. Push the latest project files to GitHub:
+
+	```powershell
+	git add .
+	git commit -m "add Vercel voice deployment"
+	git push
+	```
+
+2. Open [vercel.com](https://vercel.com) and sign in with GitHub.
+3. Click **Add New... -> Project**.
+4. Import `spiderman9793-spec/SKYLINE`.
+5. Keep the default framework setting, leave the build command empty, and click **Deploy**.
+6. Open the free `vercel.app` URL Vercel provides.
+
+The browser calls `/api/speak`, which Vercel maps to the Python function. The voice function may take a few seconds on its first request. A custom domain can be connected later from the Vercel project settings.
 
 ## Notes
 
-The browser version uses Open-Meteo directly and does not require an account. The map needs an internet connection to load its tiles, and forecast requests may take a moment depending on network conditions.
+The browser version uses Open-Meteo directly and does not require an account. The map needs an internet connection to load its tiles, and forecast requests may take a moment depending on network conditions. The voice server uses a network connection to generate the neural Hindi audio. `hi-IN-SwaraNeural` is an Indian female voice; an exact speaker age cannot be selected by the TTS service.

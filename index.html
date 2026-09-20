@@ -59,7 +59,10 @@
           <input id="city-input" type="search" value="Delhi" placeholder="Search a city" autocomplete="off">
           <button type="submit">Check weather <span aria-hidden="true">↗</span></button>
         </form>
-        <p class="status" id="status" role="status" aria-live="polite">Loading Delhi...</p>
+        <div class="status-row">
+          <p class="status" id="status" role="status" aria-live="polite">Loading Delhi...</p>
+          <button class="voice-toggle" id="voice-toggle" type="button" aria-pressed="true" aria-label="Turn Hindi weather voice off"><span aria-hidden="true">◖</span> Hindi voice on</button>
+        </div>
       </div>
       <div class="map-card" aria-label="Map showing the searched city">
         <div id="map"></div>
