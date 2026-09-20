@@ -80,7 +80,7 @@ function getSafetyNote(code) {
 
 function createHindiMessage(place, current, condition) {
   const hindiCondition = hindiConditions[condition] || 'बदलता मौसम';
-  return `नमस्ते। ${place.name} में अभी तापमान ${round(current.temperature_2m)} डिग्री सेल्सियस है। मौसम ${hindiCondition} है। नमी ${current.relative_humidity_2m} प्रतिशत है और हवा की गति ${round(current.wind_speed_10m)} किलोमीटर प्रति घंटा है।`;
+  return `${place.name} में अभी तापमान ${round(current.temperature_2m)} डिग्री सेल्सियस है। मौसम ${hindiCondition} है।`;
 }
 
 function speakWithBrowser(message) {
@@ -101,20 +101,28 @@ function speakWithBrowser(message) {
 async function speakWeather(place, current, condition) {
   if (!voiceEnabled) return;
   const message = createHindiMessage(place, current, condition);
+  statusText.textContent = 'Weather loaded. Preparing Hindi voice...';
   if (currentAudio) currentAudio.pause();
   if ('speechSynthesis' in window) window.speechSynthesis.cancel();
 
+  const controller = new AbortController();
+  const timeout = window.setTimeout(() => controller.abort(), 4000);
   try {
     const response = await fetch('/api/speak', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text: message })
+      body: JSON.stringify({ text: message }),
+      signal: controller.signal
     });
     if (!response.ok) throw new Error('TTS server unavailable');
     currentAudio = new Audio(URL.createObjectURL(await response.blob()));
     await currentAudio.play();
+    statusText.textContent = `Hindi forecast ready for ${place.name}.`;
   } catch (error) {
     speakWithBrowser(message);
+    statusText.textContent = `Forecast ready for ${place.name}.`;
+  } finally {
+    window.clearTimeout(timeout);
   }
 }
 

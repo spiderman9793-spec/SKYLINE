@@ -21,7 +21,7 @@ class SkylineHandler(SimpleHTTPRequestHandler):
         length = int(self.headers.get("Content-Length", 0))
         try:
             payload = json.loads(self.rfile.read(length))
-            text = str(payload.get("text", "")).strip()[:600]
+            text = str(payload.get("text", "")).strip()[:300]
             if not text:
                 raise ValueError("Text is required")
         except (ValueError, json.JSONDecodeError):
