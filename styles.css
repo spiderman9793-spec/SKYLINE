@@ -33,6 +33,9 @@ body::before {
 .safety-label { color: #a9c9ae; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; }
 .safety-divider { width: 1px; height: 16px; background: rgba(201, 232, 207, 0.25); }
 .safety-message { color: #f1f7ed; white-space: nowrap; }
+.safety-ribbon[data-weather*="rain"], .safety-ribbon[data-weather*="drizzle"] { border-color: rgba(126, 190, 212, 0.65); }
+.safety-ribbon[data-weather*="storm"] { border-color: rgba(241, 127, 98, 0.75); }
+.safety-ribbon[data-weather*="snow"], .safety-ribbon[data-weather*="fog"] { border-color: rgba(210, 224, 216, 0.8); }
 .side-dashboard { position: fixed; top: 0; bottom: 0; left: 0; z-index: 10; display: flex; flex-direction: column; width: 320px; padding: 30px 27px; color: #edf8ee; background: #18332c; box-shadow: 18px 0 45px rgba(14, 37, 30, 0.2); transform: translateX(-320px); }
 .dashboard-topline, .dashboard-heading, .dashboard-readout, .dashboard-stats div, .dashboard-nav a { display: flex; align-items: center; justify-content: space-between; }
 .dashboard-kicker, .dashboard-hint, .dashboard-stats span { color: #94b5a0; font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; }

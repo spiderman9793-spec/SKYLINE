@@ -5,6 +5,7 @@ const dashboard = document.querySelector('#side-dashboard');
 const dashboardClose = document.querySelector('#dashboard-close');
 const dashboardCity = document.querySelector('#dashboard-city');
 const safetyMessage = document.querySelector('#safety-message');
+const safetyRibbon = document.querySelector('#safety-ribbon');
 const mapCity = document.querySelector('#map-city');
 const mapCoordinates = document.querySelector('#map-coordinates');
 const voiceToggle = document.querySelector('#voice-toggle');
@@ -97,14 +98,15 @@ function getSafetyNote(code) {
   return safetyNotes.cloud;
 }
 
-function createHindiMessage(place, current, condition) {
-  const hindiCondition = hindiConditions[condition] || 'बदलता मौसम';
-  const safetyNote = getHindiSafetyNote(condition);
-  return `नमस्ते। ${place.name} में अभी तापमान ${round(current.temperature_2m)} डिग्री सेल्सियस है। मौसम ${hindiCondition} है। सावधानी: ${safetyNote} धन्यवाद।`;
+function getHindiSafetyNote(condition, temperature) {
+  if (temperature >= 40) return 'बहुत गर्मी है। धूप से बचें और पानी पीते रहें।';
+  return hindiSafetyNotes[condition] || 'बाहर जाते समय सावधानी बरतें।';
 }
 
-function getHindiSafetyNote(condition) {
-  return hindiSafetyNotes[condition] || 'बाहर जाते समय सावधानी बरतें।';
+function createHindiMessage(place, current, condition) {
+  const hindiCondition = hindiConditions[condition] || 'बदलता मौसम';
+  const safetyNote = getHindiSafetyNote(condition, current.temperature_2m);
+  return `नमस्ते। ${place.name} में अभी तापमान ${round(current.temperature_2m)} डिग्री सेल्सियस है। मौसम ${hindiCondition} है। सावधानी: ${safetyNote} धन्यवाद।`;
 }
 
 async function speakWeather(place, current, condition) {
@@ -234,7 +236,8 @@ function renderWeather(place, data) {
   document.querySelector('#dashboard-humidity').textContent = `${current.relative_humidity_2m}%`;
   document.querySelector('#dashboard-wind').textContent = `${round(current.wind_speed_10m)} km/h`;
   document.querySelector('#dashboard-feels').textContent = `${round(current.apparent_temperature)}°`;
-  safetyMessage.textContent = `${getHindiSafetyNote(condition)} धन्यवाद।`;
+  safetyMessage.textContent = `${getHindiSafetyNote(condition, current.temperature_2m)} धन्यवाद।`;
+  safetyRibbon.dataset.weather = condition.toLowerCase().replaceAll(' ', '-');
   statusText.textContent = `Showing the latest forecast for ${place.name}.`;
 
   document.querySelector('#forecast').innerHTML = data.daily.time.map((date, index) => {
