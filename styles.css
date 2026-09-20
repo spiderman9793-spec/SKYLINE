@@ -1,0 +1,144 @@
+:root {
+  --ink: #142421;
+  --muted: #6f7f79;
+  --line: rgba(20, 36, 33, 0.12);
+  --paper: #f7f7f1;
+  --mint: #d8f1df;
+  --mint-deep: #b8e0c3;
+  --coral: #f17f62;
+  --white: #ffffff;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-width: 320px;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: "DM Sans", sans-serif;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(circle at 75% 18%, rgba(214, 241, 223, 0.9), transparent 28%), linear-gradient(135deg, #f7f7f1 0%, #eef4e9 100%);
+}
+
+.edge-trigger { position: fixed; inset: 0 auto 0 0; z-index: 8; width: 28px; }
+.safety-ribbon { position: fixed; right: 30px; bottom: 25px; z-index: 7; display: flex; align-items: center; gap: 11px; max-width: min(590px, calc(100vw - 40px)); padding: 11px 16px 11px 11px; color: #eff8ed; background: #18332c; border: 1px solid rgba(201, 232, 207, 0.18); border-radius: 999px; box-shadow: 0 16px 35px rgba(14, 37, 30, 0.2); font-size: 0.76rem; }
+.safety-mark { display: grid; place-items: center; width: 22px; height: 22px; color: #18332c; background: #f3ad60; border-radius: 50%; font: 700 0.82rem "Space Grotesk", sans-serif; }
+.safety-label { color: #a9c9ae; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; }
+.safety-divider { width: 1px; height: 16px; background: rgba(201, 232, 207, 0.25); }
+.safety-message { color: #f1f7ed; white-space: nowrap; }
+.side-dashboard { position: fixed; top: 0; bottom: 0; left: 0; z-index: 10; display: flex; flex-direction: column; width: 320px; padding: 30px 27px; color: #edf8ee; background: #18332c; box-shadow: 18px 0 45px rgba(14, 37, 30, 0.2); transform: translateX(-320px); }
+.dashboard-topline, .dashboard-heading, .dashboard-readout, .dashboard-stats div, .dashboard-nav a { display: flex; align-items: center; justify-content: space-between; }
+.dashboard-kicker, .dashboard-hint, .dashboard-stats span { color: #94b5a0; font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.dashboard-close { padding: 0; color: #b5d7bd; background: transparent; border: 0; cursor: pointer; font-size: 1.7rem; line-height: 1; }
+.dashboard-heading { justify-content: flex-start; gap: 9px; margin: 72px 0 24px; color: #d4edda; font-size: 0.8rem; }
+.dashboard-pulse { width: 7px; height: 7px; background: #f3ad60; border-radius: 50%; box-shadow: 0 0 0 6px rgba(243, 173, 96, 0.15); }
+.dashboard-city { font: 600 2.4rem/1 "Space Grotesk", sans-serif; letter-spacing: -0.07em; }
+.dashboard-readout { align-items: flex-end; margin: 24px 0 17px; }
+.dashboard-readout span:first-child { font: 600 4.8rem/0.8 "Space Grotesk", sans-serif; letter-spacing: -0.1em; }
+.dashboard-readout span:last-child { max-width: 92px; padding-bottom: 3px; color: #b6cfbb; font-size: 0.8rem; text-align: right; }
+.dashboard-meter { height: 2px; background: rgba(201, 232, 207, 0.16); }
+.dashboard-meter span { display: block; width: 68%; height: 100%; background: #f3ad60; }
+.dashboard-stats { display: grid; gap: 16px; padding: 25px 0; border-bottom: 1px solid rgba(201, 232, 207, 0.16); }
+.dashboard-stats div { font-size: 0.82rem; }
+.dashboard-stats strong { color: #f0f8ee; font-weight: 500; }
+.dashboard-nav { display: grid; gap: 0; margin-top: 26px; }
+.dashboard-nav a { padding: 15px 0; color: #d4edda; border-bottom: 1px solid rgba(201, 232, 207, 0.16); font-size: 0.84rem; text-decoration: none; }
+.dashboard-nav a span { color: #f3ad60; font-size: 1rem; }
+.dashboard-hint { margin-top: auto; color: #719783; line-height: 1.5; text-transform: none; letter-spacing: 0; }
+
+.shell { max-width: 1180px; margin: 0 auto; padding: 30px 42px 24px; }
+.nav { display: flex; align-items: center; justify-content: space-between; }
+.brand { color: var(--ink); font-family: "Space Grotesk", sans-serif; font-size: 1.15rem; font-weight: 700; letter-spacing: -0.04em; text-decoration: none; }
+.brand-mark { display: inline-grid; place-items: center; width: 25px; height: 25px; margin-right: 8px; color: var(--white); background: var(--coral); border-radius: 50%; font-size: 1.3rem; line-height: 1; }
+.nav-note, .updated, footer { color: var(--muted); font-size: 0.78rem; }
+
+.hero { position: relative; display: grid; grid-template-columns: minmax(0, 0.95fr) minmax(280px, 1.05fr); align-items: center; min-height: 390px; padding: 62px 0 38px; overflow: hidden; }
+.hero-copy { position: relative; z-index: 1; max-width: 570px; }
+.eyebrow { margin: 0 0 16px; color: var(--coral); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+h1, h2 { margin: 0; font-family: "Space Grotesk", sans-serif; letter-spacing: -0.065em; line-height: 0.97; }
+h1 { max-width: 620px; font-size: clamp(3.4rem, 7vw, 6.3rem); }
+h1 em { color: #769680; font-style: normal; }
+.intro { max-width: 430px; margin: 26px 0 25px; color: var(--muted); font-size: 1rem; line-height: 1.6; }
+.search-form { display: flex; align-items: center; max-width: 510px; padding: 5px 5px 5px 16px; background: var(--white); border: 1px solid var(--line); border-radius: 5px; box-shadow: 0 12px 30px rgba(34, 54, 43, 0.08); }
+.search-icon { color: var(--muted); font-size: 1.4rem; transform: rotate(-20deg); }
+.search-form input { min-width: 0; flex: 1; padding: 12px 10px; color: var(--ink); background: transparent; border: 0; outline: 0; font: inherit; }
+.search-form button { padding: 13px 17px; color: var(--white); background: var(--ink); border: 0; border-radius: 3px; cursor: pointer; font: 600 0.78rem "DM Sans", sans-serif; transition: background 180ms ease, transform 180ms ease; }
+.search-form button:hover { background: #31554c; transform: translateY(-1px); }
+.status { min-height: 19px; margin: 10px 0 0 18px; color: var(--muted); font-size: 0.75rem; }
+
+.map-card { position: relative; width: min(42vw, 455px); height: 335px; justify-self: end; margin-right: 4%; overflow: hidden; border: 7px solid rgba(255, 255, 255, 0.78); border-radius: 10px; box-shadow: 0 24px 50px rgba(34, 54, 43, 0.16); }
+#map { width: 100%; height: 100%; filter: saturate(0.62) sepia(0.12) hue-rotate(70deg) brightness(1.05); }
+.map-shade { position: absolute; inset: 0; z-index: 400; pointer-events: none; background: linear-gradient(180deg, rgba(20, 54, 42, 0.5), transparent 35%, rgba(20, 54, 42, 0.18)); }
+.map-topline { position: absolute; top: 17px; right: 18px; left: 18px; z-index: 401; display: flex; align-items: center; justify-content: space-between; color: #f0f8ee; font-size: 0.66rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+.map-status-dot { width: 7px; height: 7px; background: #f3ad60; border-radius: 50%; box-shadow: 0 0 0 5px rgba(243, 173, 96, 0.18); }
+.map-location { position: absolute; right: 18px; bottom: 18px; left: 18px; z-index: 401; display: grid; gap: 4px; padding: 14px 15px; color: #f2f7ee; background: rgba(24, 51, 44, 0.9); border-left: 3px solid #f3ad60; }
+.map-location-label, #map-coordinates { color: #adc9b3; font-size: 0.68rem; }
+.map-location strong { font: 600 1.3rem/1 "Space Grotesk", sans-serif; letter-spacing: -0.04em; }
+.map-zoom { position: absolute; right: 18px; bottom: 116px; z-index: 401; display: grid; overflow: hidden; background: rgba(255, 255, 255, 0.9); border-radius: 3px; box-shadow: 0 5px 15px rgba(20, 36, 33, 0.14); }
+.map-zoom button { display: grid; place-items: center; width: 28px; height: 28px; padding: 0; color: var(--ink); background: transparent; border: 0; border-bottom: 1px solid var(--line); cursor: pointer; font: 1.1rem "DM Sans", sans-serif; }
+.map-zoom button:last-child { border: 0; }
+.map-zoom button:hover { background: #eef4e9; }
+.map-pin-wrap { display: grid; place-items: center; }
+.map-pin { position: relative; z-index: 2; display: block; width: 16px; height: 16px; background: var(--coral); border: 3px solid #fff; border-radius: 50% 50% 50% 0; box-shadow: 0 4px 9px rgba(20, 36, 33, 0.28); transform: rotate(-45deg); }
+.map-pin-pulse { position: absolute; width: 34px; height: 34px; background: rgba(241, 127, 98, 0.27); border: 1px solid rgba(241, 127, 98, 0.6); border-radius: 50%; animation: mapPulse 1.8s ease-out infinite; }
+.leaflet-control-attribution { margin: 0 5px 5px 0; color: #52665c; background: rgba(255, 255, 255, 0.72); font-size: 0.56rem; }
+
+.weather-panel { padding: 32px 36px 0; background: rgba(255, 255, 255, 0.72); border: 1px solid var(--line); border-radius: 7px; box-shadow: 0 16px 45px rgba(34, 54, 43, 0.07); backdrop-filter: blur(8px); animation: rise 700ms ease both; }
+.panel-heading, .current-weather { display: flex; align-items: flex-start; justify-content: space-between; }
+h2 { font-size: clamp(2rem, 4vw, 3.3rem); }
+.updated { margin-top: 6px; }
+.current-weather { align-items: center; padding: 35px 0 29px; border-bottom: 1px solid var(--line); }
+.temperature-wrap { display: flex; align-items: flex-start; }
+.weather-symbol { margin: 10px 14px 0 0; font-size: 2.2rem; }
+.temperature { font-family: "Space Grotesk", sans-serif; font-size: clamp(5rem, 11vw, 9.2rem); font-weight: 600; letter-spacing: -0.1em; line-height: 0.8; }
+.degree { margin: 3px 0 0 5px; color: var(--coral); font-size: 2rem; }
+.condition-wrap { display: grid; gap: 7px; color: var(--muted); text-align: right; }
+.condition-wrap strong { color: var(--ink); font-size: 1.1rem; }
+.details { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 24px 0; border-bottom: 1px solid var(--line); }
+.details div { display: flex; justify-content: space-between; gap: 15px; color: var(--muted); font-size: 0.84rem; }
+.details strong { color: var(--ink); font-weight: 600; }
+.forecast { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; }
+.forecast-day { padding: 22px 15px 24px; border-right: 1px solid var(--line); text-align: center; }
+.forecast-day:first-child { padding-left: 0; }
+.forecast-day:last-child { border-right: 0; }
+.forecast-day span, .forecast-day strong { display: block; }
+.forecast-day span { color: var(--muted); font-size: 0.76rem; }
+.forecast-day .forecast-icon { margin: 11px 0; font-size: 1.45rem; }
+.forecast-day strong { font-size: 0.88rem; }
+footer { display: flex; justify-content: space-between; padding: 24px 0 0; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+@keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes mapPulse { 0% { opacity: 0.9; transform: scale(0.45); } 70% { opacity: 0; transform: scale(1.4); } 100% { opacity: 0; transform: scale(1.4); } }
+
+@media (max-width: 700px) {
+  .edge-trigger { width: 18px; }
+  .safety-ribbon { right: 15px; bottom: 15px; left: 15px; max-width: none; padding-right: 13px; }
+  .safety-label { display: none; }
+  .safety-message { overflow: hidden; text-overflow: ellipsis; }
+  .side-dashboard { width: min(320px, 88vw); transform: translateX(-100%); }
+  .shell { padding: 22px 20px 18px; }
+  .nav-note { display: none; }
+  .hero { display: block; min-height: auto; padding: 65px 0 35px; }
+  .map-card { width: 100%; height: 250px; margin: 35px 0 0; }
+  h1 { font-size: clamp(3.2rem, 15vw, 5rem); }
+  .intro { font-size: 0.93rem; }
+  .search-form { align-items: stretch; flex-wrap: wrap; padding: 8px; }
+  .search-form input { flex-basis: calc(100% - 35px); }
+  .search-form button { width: 100%; margin-top: 5px; }
+  .status { margin-left: 3px; }
+  .weather-panel { padding: 26px 20px 0; }
+  .current-weather { display: block; padding: 32px 0 25px; }
+  .condition-wrap { margin-top: 22px; text-align: left; }
+  .details { grid-template-columns: 1fr; gap: 13px; }
+  .forecast { grid-template-columns: repeat(5, minmax(72px, 1fr)); overflow-x: auto; margin-right: -20px; padding-right: 20px; }
+  .forecast-day { padding-left: 12px; padding-right: 12px; }
+  footer { display: grid; gap: 8px; }
+}
