@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -44,7 +45,7 @@
   </aside>
   <main class="shell">
     <nav class="nav" aria-label="Main navigation">
-      <a class="brand" href="."><span class="brand-mark">+</span> Skyline</a>
+      <a class="brand" href="."><span class="brand-mark"><i data-lucide="plus"></i></span> Skyline</a>
       <span class="nav-note">Live weather, made clear</span>
     </nav>
 
@@ -55,23 +56,23 @@
         <p class="intro">A clean, quiet look at the weather that matters. Search any city to see what the next few days have in store.</p>
         <form class="search-form" id="search-form">
           <label class="sr-only" for="city-input">Search for a city</label>
-          <span class="search-icon" aria-hidden="true">⌕</span>
+          <span class="search-icon" aria-hidden="true"><i data-lucide="search"></i></span>
           <input id="city-input" type="search" value="Delhi" placeholder="Search a city" autocomplete="off">
           <button type="submit">Check weather <span aria-hidden="true">↗</span></button>
         </form>
         <div class="status-row">
           <p class="status" id="status" role="status" aria-live="polite">Loading Delhi...</p>
-          <button class="voice-toggle" id="voice-toggle" type="button" aria-pressed="true" aria-label="Turn Hindi weather voice off"><span aria-hidden="true">◖</span> Hindi voice on</button>
+          <button class="voice-toggle" id="voice-toggle" type="button" aria-pressed="true" aria-label="Turn Hindi weather voice off"><i data-lucide="volume-2"></i> Hindi voice on</button>
         </div>
       </div>
       <div class="map-card" aria-label="Map showing the searched city">
         <div id="map"></div>
         <div class="map-shade"></div>
-        <div class="map-topline"><span>Live location</span><span class="map-status-dot"></span></div>
+        <div class="map-topline"><span><i data-lucide="scan-line"></i> Live location</span><span class="map-status-dot"></span></div>
         <div class="map-location">
           <span class="map-location-label">Forecasting around</span>
           <strong id="map-city">Delhi, IN</strong>
-          <span id="map-coordinates">28.61° N · 77.21° E</span>
+          <span id="map-coordinates"><i data-lucide="crosshair"></i> 28.61° N · 77.21° E</span>
         </div>
         <div class="map-zoom" aria-label="Map zoom controls"><button id="map-zoom-in" type="button" aria-label="Zoom in">+</button><button id="map-zoom-out" type="button" aria-label="Zoom out">−</button></div>
       </div>
@@ -87,7 +88,7 @@
       </div>
       <div class="current-weather">
         <div class="temperature-wrap">
-          <span class="weather-symbol" id="weather-symbol">☀</span>
+          <span class="weather-symbol" id="weather-symbol" aria-hidden="true">☀</span>
           <span class="temperature" id="temperature">--</span><span class="degree">°</span>
         </div>
         <div class="condition-wrap">
@@ -96,10 +97,18 @@
         </div>
       </div>
       <div class="details" id="details">
-        <div><span>Humidity</span><strong id="humidity">--%</strong></div>
-        <div><span>Wind</span><strong id="wind">-- km/h</strong></div>
-        <div><span>Feels like</span><strong id="feels-like">--°</strong></div>
+        <div><span><i data-lucide="droplets"></i> Humidity</span><strong id="humidity">--%</strong></div>
+        <div><span><i data-lucide="wind"></i> Wind</span><strong id="wind">-- km/h</strong></div>
+        <div><span><i data-lucide="thermometer"></i> Feels like</span><strong id="feels-like">--°</strong></div>
       </div>
+      <div class="hourly-heading">
+        <div>
+          <p class="eyebrow">Next 24 hours</p>
+          <h3>Hourly outlook</h3>
+        </div>
+          <span><i data-lucide="clock-3"></i> Local time</span>
+      </div>
+      <div class="hourly-forecast" id="hourly-forecast" aria-label="Hourly weather forecast"></div>
       <div class="forecast" id="forecast"></div>
     </section>
 

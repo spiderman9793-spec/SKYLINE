@@ -15,6 +15,10 @@ let mapMarker;
 let voiceEnabled = true;
 let currentAudio;
 
+function refreshIcons() {
+  if (window.lucide) lucide.createIcons({ attrs: { 'stroke-width': 1.8 } });
+}
+
 const weatherLabels = {
   0: ['Clear sky', '☀'],
   1: ['Mainly clear', '◐'],
@@ -148,6 +152,12 @@ function animatePage() {
     .from('footer', { y: 12, opacity: 0, duration: 0.5 }, '-=0.35')
     .from('.safety-ribbon', { y: 24, opacity: 0, duration: 0.65 }, '-=0.25');
   gsap.to('.safety-ribbon', { y: -5, duration: 2.4, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: 1 });
+  gsap.to('.brand-mark', { rotation: 90, duration: 2.8, repeat: -1, repeatDelay: 4, ease: 'back.inOut(2)' });
+  gsap.to('.map-status-dot', { scale: 1.45, opacity: 0.55, duration: 1.3, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+  gsap.utils.toArray('.details > div, .hourly-item, .forecast-day').forEach((element) => {
+    element.addEventListener('mouseenter', () => gsap.to(element, { y: -4, duration: 0.2, ease: 'power2.out' }));
+    element.addEventListener('mouseleave', () => gsap.to(element, { y: 0, duration: 0.25, ease: 'power2.out' }));
+  });
 }
 
 function initializeMap() {
@@ -193,11 +203,13 @@ voiceToggle.addEventListener('click', () => {
   }
   voiceToggle.setAttribute('aria-pressed', String(voiceEnabled));
   voiceToggle.setAttribute('aria-label', voiceEnabled ? 'Turn Hindi weather voice off' : 'Turn Hindi weather voice on');
-  voiceToggle.innerHTML = `<span aria-hidden="true">◖</span> Hindi voice ${voiceEnabled ? 'on' : 'off'}`;
+  voiceToggle.innerHTML = `<i data-lucide="${voiceEnabled ? 'volume-2' : 'volume-x'}"></i> Hindi voice ${voiceEnabled ? 'on' : 'off'}`;
+  refreshIcons();
 });
 
 animatePage();
 initializeMap();
+refreshIcons();
 
 async function getForecast(city, announceVoice = false) {
   statusText.textContent = `Looking up ${city}...`;
@@ -208,7 +220,7 @@ async function getForecast(city, announceVoice = false) {
   if (!locationData.results?.length) throw new Error(`We couldn't find “${city}”.`);
 
   const place = locationData.results[0];
-  const forecastResponse = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${place.latitude}&longitude=${place.longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=5`);
+  const forecastResponse = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${place.latitude}&longitude=${place.longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m,weather_code&hourly=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=5`);
   if (!forecastResponse.ok) throw new Error('The forecast is unavailable right now.');
   const data = await forecastResponse.json();
   renderWeather(place, data);
@@ -244,6 +256,18 @@ function renderWeather(place, data) {
     const [label, icon] = getWeatherLabel(data.daily.weather_code[index]);
     return `<div class="forecast-day"><span>${formatDay(date, index)}</span><span class="forecast-icon" title="${label}">${icon}</span><strong>${round(data.daily.temperature_2m_max[index])}° / ${round(data.daily.temperature_2m_min[index])}°</strong></div>`;
   }).join('');
+
+  const hourlyStart = Math.max(0, data.hourly.time.findIndex((time) => time >= current.time));
+  document.querySelector('#hourly-forecast').innerHTML = data.hourly.time.slice(hourlyStart, hourlyStart + 24).map((time, index) => {
+    const [hourLabel, icon] = getWeatherLabel(data.hourly.weather_code[hourlyStart + index]);
+    const hour = index === 0 ? 'Now' : time.slice(11, 16);
+    return `<div class="hourly-item"><span>${hour}</span><span class="hourly-icon" title="${hourLabel}">${icon}</span><strong>${round(data.hourly.temperature_2m[hourlyStart + index])}°</strong></div>`;
+  }).join('');
+  refreshIcons();
+  if (window.gsap) {
+    gsap.fromTo('.weather-panel h2, .temperature-wrap, .condition-wrap, .details > div, .hourly-item, .forecast-day', { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.45, stagger: 0.025, ease: 'power2.out' });
+    gsap.fromTo('.weather-symbol', { scale: 0.6, rotation: -25 }, { scale: 1, rotation: 0, duration: 0.7, ease: 'back.out(2)' });
+  }
 }
 
 form.addEventListener('submit', (event) => {
