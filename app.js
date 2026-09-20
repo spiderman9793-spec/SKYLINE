@@ -9,14 +9,6 @@ const safetyRibbon = document.querySelector('#safety-ribbon');
 const mapCity = document.querySelector('#map-city');
 const mapCoordinates = document.querySelector('#map-coordinates');
 const voiceToggle = document.querySelector('#voice-toggle');
-const hostModal = document.querySelector('#host-modal');
-const hostClose = document.querySelector('#host-close');
-const hostBackdrop = document.querySelector('#host-backdrop');
-const hostAction = document.querySelector('#host-action');
-const hostGreeting = document.querySelector('#host-greeting');
-const hostTemperature = document.querySelector('#host-temperature');
-const hostCondition = document.querySelector('#host-condition');
-const hostSafety = document.querySelector('#host-safety');
 let dashboardOpen = false;
 let map;
 let mapMarker;
@@ -121,28 +113,6 @@ function createHindiMessage(place, current, condition) {
   return `नमस्ते। ${place.name} में अभी तापमान ${round(current.temperature_2m)} डिग्री सेल्सियस है। मौसम ${hindiCondition} है। सावधानी: ${safetyNote} धन्यवाद।`;
 }
 
-function showWeatherHost(place, current, condition) {
-  const safetyNote = getHindiSafetyNote(condition, current.temperature_2m);
-  hostGreeting.textContent = `नमस्ते। ${place.name} का मौसम मैंने देख लिया है।`;
-  hostTemperature.textContent = `${round(current.temperature_2m)}°C`;
-  hostCondition.textContent = hindiConditions[condition] || 'बदलता मौसम';
-  hostSafety.textContent = `सावधानी: ${safetyNote} धन्यवाद।`;
-  hostModal.setAttribute('aria-hidden', 'false');
-  document.body.classList.add('host-open');
-  refreshIcons();
-  if (window.gsap) {
-    gsap.fromTo(hostModal, { opacity: 0 }, { opacity: 1, duration: 0.25 });
-    gsap.fromTo('.host-card', { y: 45, scale: 0.92, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.65, ease: 'back.out(1.6)' });
-    gsap.fromTo('.host-avatar', { y: 22, rotation: -4 }, { y: 0, rotation: 0, duration: 0.8, ease: 'back.out(2)' });
-    gsap.fromTo('.host-copy > *', { y: 12, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, stagger: 0.06, delay: 0.2, ease: 'power2.out' });
-  }
-}
-
-function closeWeatherHost() {
-  hostModal.setAttribute('aria-hidden', 'true');
-  document.body.classList.remove('host-open');
-}
-
 async function speakWeather(place, current, condition) {
   if (!voiceEnabled) return;
   const message = createHindiMessage(place, current, condition);
@@ -236,14 +206,6 @@ voiceToggle.addEventListener('click', () => {
   voiceToggle.innerHTML = `<i data-lucide="${voiceEnabled ? 'volume-2' : 'volume-x'}"></i> Hindi voice ${voiceEnabled ? 'on' : 'off'}`;
   refreshIcons();
 });
-hostClose.addEventListener('click', closeWeatherHost);
-hostBackdrop.addEventListener('click', closeWeatherHost);
-hostAction.addEventListener('click', () => {
-  if (currentAudio) {
-    currentAudio.currentTime = 0;
-    currentAudio.play();
-  }
-});
 
 animatePage();
 initializeMap();
@@ -263,7 +225,6 @@ async function getForecast(city, announceVoice = false) {
   const data = await forecastResponse.json();
   renderWeather(place, data);
   animateMapTo(place);
-  if (announceVoice) showWeatherHost(place, data.current, getWeatherLabel(data.current.weather_code)[0]);
   if (announceVoice) speakWeather(place, data.current, getWeatherLabel(data.current.weather_code)[0]);
 }
 
